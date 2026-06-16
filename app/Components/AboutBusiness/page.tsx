@@ -38,8 +38,23 @@ export default function AboutBusiness() {
   const { nameLabel, namePlaceholder, descLabel, descPlaceholder } = getFormDetails();
 
   return (
-    <div className="flex flex-col h-screen w-full bg-gray-50 font-sans overflow-hidden">
+    // Outer Wrapper with relative positioning
+    <div className="flex flex-col h-screen w-full bg-[#fcfafb] font-sans overflow-hidden relative">
       
+      {/* --- BACKGROUND TEXTURES (Left & Right) --- */}
+      {/* pointer-events-none ensures they don't block any clicks on the form */}
+      <img 
+        src="/texture-left.png" 
+        alt="Background Left Texture" 
+        className="absolute left-0 top-1/2 -translate-y-1/2 h-[75%] max-h-[800px] object-contain opacity-80 pointer-events-none z-0"
+      />
+      <img 
+        src="/texture-right.png" 
+        alt="Background Right Texture" 
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-[75%] max-h-[800px] object-contain opacity-80 pointer-events-none z-0"
+      />
+      {/* ------------------------------------------ */}
+
       {/* FIXED TOP HEADER */}
       <header className="px-8 py-5 bg-white border-b border-gray-200 flex items-center gap-4 shrink-0 shadow-sm z-20">
         <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
@@ -51,9 +66,12 @@ export default function AboutBusiness() {
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 w-full overflow-y-auto flex flex-col p-4 md:p-8">
-        <div className="m-auto bg-white w-full max-w-5xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 shrink-0 relative z-0">
+      <main className="flex-1 w-full overflow-y-auto flex flex-col p-4 md:p-8 z-10">
+        
+        {/* THE MAIN CARD (Relative & z-10 so it stays above the background textures) */}
+        <div className="m-auto bg-white/95 backdrop-blur-sm w-full max-w-5xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 p-6 md:p-10 shrink-0 relative z-10">
           
+          {/* Stepper Timeline */}
           <div className="w-full max-w-2xl mx-auto mb-10 relative z-10">
             <div className="absolute top-4 left-[10%] right-[10%] h-[2px] bg-gray-200 -z-10"></div>
             <div className="flex justify-between items-start text-sm font-medium text-gray-400">
@@ -82,13 +100,16 @@ export default function AboutBusiness() {
             </div>
           </div>
 
-          <div className="text-center mb-10">
+          {/* Titles */}
+          <div className="text-center mb-10 relative z-10">
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">Let's start with your business</h2>
             <p className="text-gray-500 text-sm md:text-base">This helps us create a website that fits your needs.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Form Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
             
+            {/* Left Side: Local Image (Make sure you replaced your-local-image-name.png) */}
             <div className="hidden lg:flex lg:col-span-5 justify-center items-center">
               <img 
                 src="/your-local-image-name.png" 
@@ -97,10 +118,13 @@ export default function AboutBusiness() {
               />
             </div>
 
+            {/* Right Side: Form Content */}
             <div className="lg:col-span-7 flex flex-col space-y-6 md:space-y-8">
               
+              {/* 3 Choice Cards */}
               <div className="grid grid-cols-3 gap-3 md:gap-4">
                 
+                {/* Clients Card */}
                 <button 
                   type="button" 
                   onClick={() => { setSelectedType("clients"); setName(""); setDescription(""); }} 
@@ -119,6 +143,7 @@ export default function AboutBusiness() {
                   <span className="text-[10px] md:text-xs text-gray-500 mt-1">(Agency)</span>
                 </button>
 
+                {/* Myself Card */}
                 <button 
                   type="button" 
                   onClick={() => { setSelectedType("myself"); setName(""); setDescription(""); }} 
@@ -137,6 +162,7 @@ export default function AboutBusiness() {
                   <span className="text-[10px] md:text-xs text-gray-500 mt-1">(Individual)</span>
                 </button>
 
+                {/* Company Card */}
                 <button 
                   type="button" 
                   onClick={() => { setSelectedType("company"); setName(""); setDescription(""); }} 
@@ -156,6 +182,7 @@ export default function AboutBusiness() {
                 </button>
               </div>
 
+              {/* Dynamic Inputs Section */}
               <div className="space-y-4 md:space-y-5">
                 <div className="flex flex-col gap-1.5 md:gap-2">
                   <label className="text-sm font-bold text-gray-900">{nameLabel}</label>
