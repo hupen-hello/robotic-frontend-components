@@ -574,8 +574,8 @@ export default function WebsiteType() {
           Back
         </Link>
 
-        <button
-          type="button"
+        <Link
+          href="/DemoTemplates"
           className="px-6 md:px-8 py-2.5 md:py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-red-600/30 text-sm cursor-pointer"
         >
           Continue
@@ -592,7 +592,7 @@ export default function WebsiteType() {
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             ></path>
           </svg>
-        </button>
+        </Link>
       </footer>
     </div>
   );
