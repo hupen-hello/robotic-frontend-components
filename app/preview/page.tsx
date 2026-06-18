@@ -84,15 +84,12 @@ export default function TemplatePreview() {
                 </div>
               </div>
               
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] text-gray-400 font-sans tracking-widest uppercase">
-                MONITOR
-              </div>
+              
             </div>
 
             <div className="w-10 h-6 bg-gradient-to-b from-gray-700 to-gray-800 z-0"></div>
             <div className="w-40 h-3 bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-lg shadow-xl border-b-2 border-gray-500 z-0"></div>
             
-            {/* यहाँ से Copy URL वाला हिस्सा हटा दिया गया है */}
           </div>
 
           <div className="flex flex-col items-center gap-3 shrink-0">
@@ -120,7 +117,7 @@ export default function TemplatePreview() {
 
       <footer className="px-8 py-4 bg-white border-t border-gray-200 flex justify-between items-center shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.02)] z-20 w-full">
         <Link 
-          href="/template" 
+          href="/DemoTemplates" 
           className="px-6 md:px-8 py-2.5 md:py-3 border border-gray-200 bg-white text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all shadow-sm text-sm cursor-pointer flex items-center justify-center"
         >
           Back
