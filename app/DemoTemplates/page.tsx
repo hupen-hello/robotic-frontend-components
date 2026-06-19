@@ -34,10 +34,6 @@ export default function ChooseTemplate() {
     });
   }, [pageType, templates]);
 
-  // const handleSeeMore = () => {
-  //   setVisibleCount((prev) => prev + 3);
-  // };
-
   const openPreview = (tmpl: any) => {
     setSelectedTemplate(tmpl.id);
     setPreviewData(tmpl);
@@ -52,7 +48,7 @@ export default function ChooseTemplate() {
     setTimeout(() => {
       setIsPreviewOpen(false);
       setIsAnimatingOut(false);
-    }, 450);   
+    }, 700); // Matched with animation duration
   };
 
   const filterOptions = [
@@ -98,6 +94,16 @@ export default function ChooseTemplate() {
     }
     return () => cancelAnimationFrame(animationFrameId);
   }, [isAutoScroll, isPreviewOpen, isHovering, showIframe]);
+
+  const toggleAutoScroll = () => {
+    const nextState = !isAutoScroll;
+    setIsAutoScroll(nextState);
+    
+    // Website ko starting par wapas lane ka logic
+    if (!nextState && screenRef.current) {
+      screenRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-[#fcfafb] font-sans overflow-x-hidden relative">
@@ -225,20 +231,11 @@ export default function ChooseTemplate() {
                 <button onClick={() => setPageType("all")} className="text-[#bf161d] font-semibold hover:underline">Clear Filters</button>
               </div>
             )}
-
-            {/* {visibleCount < filteredTemplates.length && (
-              <div className="flex justify-center mt-12 mb-4">
-                <button onClick={handleSeeMore} className="px-10 py-3.5 bg-white border-2 border-gray-200 hover:border-[#bf161d] text-gray-800 hover:text-[#bf161d] font-bold rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer flex items-center gap-2 text-sm">
-                  Load More
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-              </div>
-            )} */}
           </div>
         </div>
       </main>
 
- 
+      {/* Main Container */}
       <div className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-500 ${isPreviewOpen || isAnimatingOut ? 'visible' : 'invisible'}`}>
         
         <div 
@@ -246,12 +243,13 @@ export default function ChooseTemplate() {
           onClick={closePreview}
         ></div>
         
-        <div className={`bg-[#f4f7fe] w-full h-[100vh] shadow-2xl relative flex flex-col overflow-hidden transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isAnimatingOut || !isPreviewOpen ? 'translate-y-full' : 'translate-y-0'}`}>
+        {/* Updated Animation Classes (translate-y-[100vh] with ease-in-out and duration-700) */}
+        <div className={`bg-[#f4f7fe] w-full h-[100vh] shadow-2xl relative flex flex-col overflow-hidden transition-transform duration-700 ease-in-out ${isAnimatingOut || !isPreviewOpen ? 'translate-y-[100vh]' : 'translate-y-0'}`}>
 
           <img src="/texture-left.png" alt="Texture" className="absolute left-0 top-1/2 -translate-y-1/2 h-[85%] max-h-[900px] object-contain opacity-80 pointer-events-none z-0 scale-110 fixed" />
-      <img src="/texture-right.png" alt="Texture" className="absolute right-0 top-1/2 -translate-y-1/2 h-[85%] max-h-[900px] object-contain opacity-80 pointer-events-none z-0 scale-110 fixed" />
+          <img src="/texture-right.png" alt="Texture" className="absolute right-0 top-1/2 -translate-y-1/2 h-[85%] max-h-[900px] object-contain opacity-80 pointer-events-none z-0 scale-110 fixed" />
 
-          <div className="flex justify-between items-center px-6 md:px-10 py-2  shrink-0">
+          <div className="flex justify-between items-center px-6 md:px-10 py-2 shrink-0 z-10 bg-[#f4f7fe]/80 backdrop-blur-md">
             <div className="flex items-center gap-4">
               <h2 className="text-xl md:text-2xl font-black text-gray-900">{previewData?.title || 'Template'}</h2>
               <span className="hidden md:flex bg-blue-100 text-[#3f31ff] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
@@ -267,110 +265,120 @@ export default function ChooseTemplate() {
             </button>
           </div>
 
-          <div className="flex-1 w-full overflow-y-auto px-2 md:px-10 pb-2 pt-2 flex flex-col lg:flex-row gap-10 custom-scrollbar">
+          <div className="flex-1 w-full overflow-y-auto px-4 md:px-10 pb-6 pt-6 flex justify-center custom-scrollbar z-10">
             
-            <div className="flex-1 flex flex-col items-center justify-center">
+            {/* Added Wrapper to prevent elements running far apart on zoom out */}
+            <div className="w-full max-w-[1400px] flex flex-col items-center lg:flex-row justify-center gap-10 lg:gap-16 mx-auto">
               
-              <div className="w-full max-w-2xl relative drop-shadow-2xl">
-                <div className="bg-[#111111] border-[10px] md:border-[16px] border-[#111111] rounded-[1.5rem] md:rounded-[2rem] w-full aspect-[16/10] relative shadow-inner flex flex-col">
-                  <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full z-20"></div>
-                  
-                  <div 
-                    ref={screenRef}
-                    className="flex-1 w-full bg-white relative overflow-y-auto overflow-x-hidden rounded-md md:rounded-lg custom-scrollbar"
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)} 
-                  >
-                    {!showIframe ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
-                         <div className="w-8 h-8 border-4 border-gray-200 border-t-[#3f31ff] rounded-full animate-spin mb-3"></div>
-                         <span className="font-bold tracking-widest text-xs">LOADING...</span>
-                      </div>
-                    ) : (
-                      <div style={{ width: '1440px', height: '4000px', transform: 'scale(0.60)', transformOrigin: 'top left' }} className="md:scale-[0.70] lg:scale-[0.60] xl:scale-[0.75]">
-                        <iframe 
-                          src={previewData?.url} 
-                          className="w-full h-full border-none pointer-events-auto"
-                          scrolling="no"
-                          title="Template Preview"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
+              <div className="flex-1 w-full flex flex-col items-center justify-center max-w-4xl">
                 
-                <div className="w-[110%] -ml-[5%] h-3 md:h-4 bg-[#111111] rounded-b-[1rem] border-t border-gray-700 shadow-xl flex justify-center">
-                   <div className="w-1/4 h-1 md:h-1.5 bg-gray-700 rounded-b-md"></div>
+                <div className="w-full max-w-3xl relative drop-shadow-2xl">
+                  <div className="bg-[#111111] border-[10px] md:border-[16px] border-[#111111] rounded-[1.5rem] md:rounded-[2rem] w-full aspect-[16/10] relative shadow-inner flex flex-col">
+                    <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full z-20"></div>
+                    
+                    <div 
+                      ref={screenRef}
+                      className="flex-1 w-full bg-white relative overflow-y-auto overflow-x-hidden rounded-md md:rounded-lg custom-scrollbar"
+                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseLeave={() => setIsHovering(false)} 
+                    >
+                      {!showIframe ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                           <div className="w-8 h-8 border-4 border-gray-200 border-t-[#3f31ff] rounded-full animate-spin mb-3"></div>
+                           <span className="font-bold tracking-widest text-xs">LOADING...</span>
+                        </div>
+                      ) : (
+                        <div style={{ width: '1650px', height: '4000px', transform: 'scale(0.60)', transformOrigin: 'top left' }} className="md:scale-[0.70] lg:scale-[0.60] xl:scale-[0.75]">
+                          <iframe 
+                            src={previewData?.url} 
+                            className="w-full h-full border-none pointer-events-auto"
+                            scrolling="no"
+                            title="Template Preview"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="w-[110%] -ml-[5%] h-3 md:h-4 bg-[#111111] rounded-b-[1rem] border-t border-gray-700 shadow-xl flex justify-center">
+                     <div className="w-1/4 h-1 md:h-1.5 bg-gray-700 rounded-b-md"></div>
+                  </div>
                 </div>
+
+                <div className="mt-8 flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm">
+                  <span className="font-bold text-lg text-gray-900 tracking-wide">
+                    {isAutoScroll ? "ON" : "OFF"}
+                  </span>
+                  <button 
+                    onClick={toggleAutoScroll}
+                    className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 shadow-inner cursor-pointer ${isAutoScroll ? 'bg-[#3f31ff]' : 'bg-gray-200'}`}
+                  >
+                    <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${isAutoScroll ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  </button>
+                </div>
+
               </div>
 
-              <div className="mt-8 flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm">
-                <span className="font-bold text-lg text-gray-900 tracking-wide">Scroll</span>
-                <button 
-                  onClick={() => setIsAutoScroll(!isAutoScroll)}
-                  className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 shadow-inner cursor-pointer ${isAutoScroll ? 'bg-[#3f31ff]' : 'bg-gray-200'}`}
-                >
-                  <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${isAutoScroll ? 'translate-x-6' : 'translate-x-0'}`}></div>
+              <div className="relative w-full lg:w-[400px] xl:w-[420px] justify-center bg-white rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-gray-50 h-fit shrink-0 overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#bf161d] to-[#e61922]"></div>
+
+                <div className="flex flex-col items-center text-center">
+                  <span className="bg-red-50 text-[#bf161d] px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.15em] mb-2">
+                    {previewData?.type === "single" ? "Single Page" : "Multi-Page"}
+                  </span>
+
+                  <h3 className="text-2xl font-black text-gray-900 mb-2 tracking-tight leading-tight">
+                    {previewData?.title || 'Template Name'}
+                  </h3>
+                  
+                  <p className="text-gray-500 font-medium leading-relaxed mb-5 text-xs px-2">
+                    Elevate your digital presence with a design built for high conversion, speed, and ultimate professionalism.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-[2px] h-4 bg-[#bf161d] rounded-full"></div>
+                    <h4 className="font-black text-[11px] text-gray-400 uppercase tracking-widest">Key Highlights</h4>
+                  </div>
+
+                  <ul className="space-y-3">
+                    {[
+                      "Pixel Perfect Responsive Design",
+                      "SEO Friendly Infrastructure",
+                      "High Performance & Fast Loading",
+                      "Full Customization Control"
+                    ].map((feature, index) => (
+                      <li key={index} className="flex items-center gap-3 group/item">
+                        <div className="w-5 h-5 rounded-md bg-red-50 flex items-center justify-center shrink-0 transition-all group-hover/item:bg-[#bf161d]">
+                          <svg className="w-3 h-3 text-[#bf161d] group-hover/item:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                        </div>
+                        <span className="text-gray-700 font-bold text-[13px] tracking-tight">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="my-5 h-[1px] w-full bg-gradient-to-r from-transparent via-gray-100 to-transparent"></div>
+
+                <button className="w-full py-3.5 bg-[#bf161d] text-white rounded-xl font-black text-sm hover:bg-[#a01218] transition-all shadow-[0_8px_20px_rgba(191,22,29,0.25)] hover:shadow-[0_12px_25px_rgba(191,22,29,0.35)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn">
+                  USE THIS TEMPLATE
+                  <svg className="w-4 h-4 transform transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
                 </button>
+                
+                <p className="text-center mt-3 text-gray-400 text-[10px] font-bold tracking-tight">
+                  * You can change images and text later
+                </p>
               </div>
 
             </div>
-
-            <div className="relative w-full lg:w-[430px] bg-white rounded-[2rem] p-4 shadow-[0_15px_50px_rgba(0,0,0,0.04)] h-fit shrink-0">
-              <h3 className="text-xl text-center font-black text-gray-900 mb-3">{previewData?.title || 'Template Name'}</h3>
-              <p className="text-gray-500 font-medium leading-relaxed mb-6">
-                A modern and professional template designed to help you build a stunning online presence quickly and easily.
-              </p>
-              
-              <hr className="border-gray-100 mb-6" />
-              
-              <h4 className="font-extrabold text-lg text-gray-900 mb-5">What's included:</h4>
-              <ul className="space-y-4 mb-10">
-                <li className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#3f31ff] text-white flex items-center justify-center shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                  </div>
-                  <span className="text-gray-700 font-bold text-sm">Responsive Design</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#3f31ff] text-white flex items-center justify-center shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                  </div>
-                  <span className="text-gray-700 font-bold text-sm">Modern & Clean Layout</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#3f31ff] text-white flex items-center justify-center shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                  </div>
-                  <span className="text-gray-700 font-bold text-sm">SEO Optimized</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#3f31ff] text-white flex items-center justify-center shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                  </div>
-                  <span className="text-gray-700 font-bold text-sm">Easy to Customize</span>
-                </li>
-              </ul>
-
-              <button className="w-full py-4 bg-[#3f31ff] text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-[0_8px_20px_rgba(63,49,255,0.3)] hover:-translate-y-1">
-                Use This Template &rarr;
-              </button>
-            </div>
-
           </div>
         </div>
       </div>
-
-      <footer className="px-8 py-4 bg-white border-t border-gray-200 flex justify-between items-center shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.02)] z-20 w-full">
-        <Link 
-          href="/DemoTemplates" 
-          className="px-6 md:px-8 py-2.5 md:py-3 border border-gray-200 bg-white text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all shadow-sm text-sm cursor-pointer flex items-center justify-center"
-        >
-          Back
-        </Link>
-        
-        
-      </footer>
 
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
