@@ -14,7 +14,8 @@ export default function ChooseTemplate() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [previewData, setPreviewData] = useState<any>(null);
-  const [showIframe, setShowIframe] = useState(false);
+  
+  const [showImage, setShowImage] = useState(false);
   
   const [isAutoScroll, setIsAutoScroll] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
@@ -24,7 +25,7 @@ export default function ChooseTemplate() {
   const templates = Array.from({ length: 8 }).map((_, i) => ({
     id: i + 1,
     title: `Premium Template ${i + 1}`,
-    url: "https://html.themehour.net/piller/demo/home-2.html",
+    image: "/templatess.png",  
     type: i % 2 === 0 ? "single" : "multiple",
   }));
 
@@ -40,7 +41,7 @@ export default function ChooseTemplate() {
     setIsPreviewOpen(true);
     setIsAutoScroll(false);
     setIsHovering(false);
-    setShowIframe(false);
+    setShowImage(false);
   };
 
   const closePreview = () => {
@@ -48,7 +49,7 @@ export default function ChooseTemplate() {
     setTimeout(() => {
       setIsPreviewOpen(false);
       setIsAnimatingOut(false);
-    }, 700); // Matched with animation duration
+    }, 700); 
   };
 
   const filterOptions = [
@@ -69,7 +70,7 @@ export default function ChooseTemplate() {
 
   useEffect(() => {
     if (isPreviewOpen && !isAnimatingOut) {
-      const timer = setTimeout(() => setShowIframe(true), 800);
+      const timer = setTimeout(() => setShowImage(true), 800);
       return () => clearTimeout(timer);
     }
   }, [isPreviewOpen, isAnimatingOut]);
@@ -89,17 +90,16 @@ export default function ChooseTemplate() {
       }
     };
 
-    if (isAutoScroll && isPreviewOpen && !isHovering && showIframe) {
+    if (isAutoScroll && isPreviewOpen && !isHovering && showImage) {
       animationFrameId = requestAnimationFrame(autoScroll);
     }
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isAutoScroll, isPreviewOpen, isHovering, showIframe]);
+  }, [isAutoScroll, isPreviewOpen, isHovering, showImage]);
 
   const toggleAutoScroll = () => {
     const nextState = !isAutoScroll;
     setIsAutoScroll(nextState);
     
-    // Website ko starting par wapas lane ka logic
     if (!nextState && screenRef.current) {
       screenRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -190,21 +190,11 @@ export default function ChooseTemplate() {
                   >
                     
                     <div className="w-full h-56 md:h-64 rounded-2xl relative overflow-hidden bg-gray-50 border border-gray-100">
-                      {tmpl.id === 1 ? (
-                        <iframe
-                          src={tmpl.url}
-                          title={tmpl.title}
-                          loading="lazy"
-                          scrolling="no"
-                          className="absolute top-0 left-0 w-[400%] h-[400%] origin-top-left scale-[0.25] pointer-events-none bg-white"
-                          tabIndex={-1}
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#1c2237] to-[#121626] flex flex-col items-center justify-center text-white p-4">
-                          <svg className="w-10 h-10 opacity-30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                          <span className="text-sm font-bold opacity-50 tracking-widest uppercase">PREVIEW {tmpl.id}</span>
-                        </div>
-                      )}
+                      <img 
+                        src={tmpl.image} 
+                        alt={tmpl.title} 
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      />
 
                       <div className="absolute inset-0 bg-black/5 group-hover:bg-black/30 transition-colors z-10 flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-[#bf161d] px-5 py-2 rounded-full font-bold shadow-lg text-sm transform translate-y-4 group-hover:translate-y-0">
@@ -235,7 +225,6 @@ export default function ChooseTemplate() {
         </div>
       </main>
 
-      {/* Main Container */}
       <div className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-500 ${isPreviewOpen || isAnimatingOut ? 'visible' : 'invisible'}`}>
         
         <div 
@@ -243,7 +232,6 @@ export default function ChooseTemplate() {
           onClick={closePreview}
         ></div>
         
-        {/* Updated Animation Classes (translate-y-[100vh] with ease-in-out and duration-700) */}
         <div className={`bg-[#f4f7fe] w-full h-[100vh] shadow-2xl relative flex flex-col overflow-hidden transition-transform duration-700 ease-in-out ${isAnimatingOut || !isPreviewOpen ? 'translate-y-[100vh]' : 'translate-y-0'}`}>
 
           <img src="/texture-left.png" alt="Texture" className="absolute left-0 top-1/2 -translate-y-1/2 h-[85%] max-h-[900px] object-contain opacity-80 pointer-events-none z-0 scale-110 fixed" />
@@ -267,7 +255,6 @@ export default function ChooseTemplate() {
 
           <div className="flex-1 w-full overflow-y-auto px-4 md:px-10 pb-6 pt-6 flex justify-center custom-scrollbar z-10">
             
-            {/* Added Wrapper to prevent elements running far apart on zoom out */}
             <div className="w-full max-w-[1400px] flex flex-col items-center lg:flex-row justify-center gap-10 lg:gap-16 mx-auto">
               
               <div className="flex-1 w-full flex flex-col items-center justify-center max-w-4xl">
@@ -282,20 +269,17 @@ export default function ChooseTemplate() {
                       onMouseEnter={() => setIsHovering(true)}
                       onMouseLeave={() => setIsHovering(false)} 
                     >
-                      {!showIframe ? (
+                      {!showImage ? (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
                            <div className="w-8 h-8 border-4 border-gray-200 border-t-[#3f31ff] rounded-full animate-spin mb-3"></div>
                            <span className="font-bold tracking-widest text-xs">LOADING...</span>
                         </div>
                       ) : (
-                        <div style={{ width: '1650px', height: '4000px', transform: 'scale(0.60)', transformOrigin: 'top left' }} className="md:scale-[0.70] lg:scale-[0.60] xl:scale-[0.75]">
-                          <iframe 
-                            src={previewData?.url} 
-                            className="w-full h-full border-none pointer-events-auto"
-                            scrolling="no"
-                            title="Template Preview"
-                          />
-                        </div>
+                        <img 
+                          src={previewData?.image} 
+                          alt="Template Full Preview" 
+                          className="w-full h-auto object-top"
+                        />
                       )}
                     </div>
                   </div>
