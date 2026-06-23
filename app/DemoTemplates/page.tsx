@@ -347,12 +347,15 @@ export default function ChooseTemplate() {
 
                 <div className="my-5 h-[1px] w-full bg-gradient-to-r from-transparent via-gray-100 to-transparent"></div>
 
-                <button className="w-full py-3.5 bg-[#bf161d] text-white rounded-xl font-black text-sm hover:bg-[#a01218] transition-all shadow-[0_8px_20px_rgba(191,22,29,0.25)] hover:shadow-[0_12px_25px_rgba(191,22,29,0.35)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn">
-                  USE THIS TEMPLATE
-                  <svg className="w-4 h-4 transform transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </button>
+                <Link 
+  href="/Dashboard" 
+  className="w-full py-3.5 bg-[#bf161d] text-white rounded-xl font-black text-sm hover:bg-[#a01218] transition-all shadow-[0_8px_20px_rgba(191,22,29,0.25)] hover:shadow-[0_12px_25px_rgba(191,22,29,0.35)] active:scale-[0.98] flex items-center justify-center gap-2 group/btn"
+>
+  USE THIS TEMPLATE
+  <svg className="w-4 h-4 transform transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+  </svg>
+</Link>
                 
                 <p className="text-center mt-3 text-gray-400 text-[10px] font-bold tracking-tight">
                   * You can change images and text later
